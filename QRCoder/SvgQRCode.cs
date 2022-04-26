@@ -107,7 +107,7 @@ namespace QRCoder
         /// <param name="sizingMode">Defines if width/height or viewbox should be used for size definition</param>
         /// <param name="logo">A (optional) logo to be rendered on the code (either Bitmap or SVG)</param>
         /// <returns>SVG as string</returns>
-        public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute, SvgLogo logo = null)
+        public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute, SvgLogo logo = null, bool drawBorder = false)
         {
             int offset = drawQuietZones ? 0 : 4;
             int drawableModulesCount = this.QrCodeData.ModuleMatrix.Count - (drawQuietZones ? 0 : offset * 2);
@@ -155,7 +155,13 @@ namespace QRCoder
             }
 
             StringBuilder svgFile = new StringBuilder($@"<svg version=""1.1"" baseProfile=""full"" shape-rendering=""crispEdges"" {svgSizeAttributes} xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"">");
-            svgFile.AppendLine($@"<rect x=""0"" y=""0"" width=""{CleanSvgVal(qrSize)}"" height=""{CleanSvgVal(qrSize)}"" fill=""{lightColorHex}"" />");
+if (drawBorder)
+{
+ svgFile.AppendLine($@"<rect x=""0"" y=""0"" width=""{CleanSvgVal(qrSize)}"" height=""{CleanSvgVal(qrSize)}"" fill=""{lightColorHex}"" stroke=""{darkColorHex}"" stroke-linejoin=""round"" stroke-width=""20"" />");
+}else
+{
+     svgFile.AppendLine($@"<rect x=""0"" y=""0"" width=""{CleanSvgVal(qrSize)}"" height=""{CleanSvgVal(qrSize)}"" fill=""{lightColorHex}"" />");
+}
             for (int yi = 0; yi < drawableModulesCount; yi += 1)
             {
                 double y = yi * pixelsPerModule;
@@ -182,7 +188,7 @@ namespace QRCoder
                         // Output SVG rectangles
                         double x = xi * pixelsPerModule;
                         if (logo == null || !logo.FillLogoBackground() || !IsBlockedByLogo(x, y, logoAttr, pixelsPerModule))
-                            svgFile.AppendLine($@"<rect x=""{CleanSvgVal(x)}"" y=""{CleanSvgVal(y)}"" width=""{CleanSvgVal(xL * pixelsPerModule)}"" height=""{CleanSvgVal(yL * pixelsPerModule)}"" fill=""{darkColorHex}"" />");                       
+                            svgFile.AppendLine($@"<rect x=""{CleanSvgVal(x)}"" y=""{CleanSvgVal(y)}"" width=""{CleanSvgVal(xL * pixelsPerModule)}"" height=""{CleanSvgVal(yL * pixelsPerModule)}"" fill=""{darkColorHex}"" stroke=""{darkColorHex}"" />");                       
                     }
                 }
             }
