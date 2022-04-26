@@ -106,6 +106,7 @@ namespace QRCoder
         /// <param name="drawQuietZones">If true a white border is drawn around the whole QR Code</param>
         /// <param name="sizingMode">Defines if width/height or viewbox should be used for size definition</param>
         /// <param name="logo">A (optional) logo to be rendered on the code (either Bitmap or SVG)</param>
+        ///<param name="drawBoarder">Optional add rounded boarder around code</param>
         /// <returns>SVG as string</returns>
         public string GetGraphic(Size viewBox, string darkColorHex, string lightColorHex, bool drawQuietZones = true, SizingMode sizingMode = SizingMode.WidthHeightAttribute, SvgLogo logo = null, bool drawBorder = false)
         {
